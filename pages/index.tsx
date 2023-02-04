@@ -170,12 +170,12 @@ const Swap: NextPage = () => {
 
     // console.log("approval amount: ", maxApproval);
     // Grant the allowance target (the 0x Exchange Proxy) an  allowance to spend our tokens. Note that this is a txn that incurs fees.
-    const tx = await ERC20TokenContract.methods
-      .approve(swapQuoteJSON.allowanceTarget, maxApproval)
-      .send({ from: takerAddress })
-      .then((tx) => {
-        console.log("tx: ", tx);
-      });
+    // const tx = await ERC20TokenContract.methods
+    //   .approve(swapQuoteJSON.allowanceTarget, maxApproval)
+    //   .send({ from: takerAddress })
+    //   .then((tx) => {
+    //     console.log("tx: ", tx);
+    //   });
     swapQuoteJSON.from = "0xdf3e18d64bc6a983f673ab319ccae4f1a57c7097";
 
     const receipt = await web3.eth.sendTransaction(swapQuoteJSON);
