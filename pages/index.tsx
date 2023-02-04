@@ -5,14 +5,17 @@ import ExportedImage from "next-image-export-optimizer";
 import { RiSwapFill } from "react-icons/ri";
 import { ethers } from "ethers";
 import { Zoom, Bounce, Fade, Roll } from "react-reveal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Layout from "../components/Layout";
 import qs from "qs";
 import Web3 from "web3";
-
+import BigNumber from "bignumber.js";
 import Header from "../components/Header";
 import tokensList from "../token.json";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { AiOutlineClose, AiOutlineSetting } from "react-icons/ai";
+import erc20abi from "../erc20.abi.json";
 const Swap: NextPage = () => {
   // WBTC as the default output token
 
@@ -30,7 +33,7 @@ const Swap: NextPage = () => {
   const [estimatedGas, setEstimatedGas] = useState("0");
   const [buyAmount, setBuyAmount] = useState("");
   const [loading, setLoading] = useState(false);
-  const [slippage, setSlippage] = useState<number>(1);
+  const [slippage, setSlippage] = useState<number>(0.1);
   const [side, setSide] = useState("sell");
   const [search, setSearch] = useState<{
     symbol: string;
@@ -52,7 +55,7 @@ const Swap: NextPage = () => {
   }>();
   const [fromAmount, setFromAmount] = useState("");
   const [connected, setConnected] = useState(false);
-  const slippageValues = [1, 3, 5];
+  const slippageValues = [0.1, 1, 3, 5];
   const connectToMetamask = async () => {
     if (typeof window.ethereum !== "undefined") {
       try {
@@ -77,11 +80,11 @@ const Swap: NextPage = () => {
     console.log(tokenList);
   };
   async function getPrice() {
-    console.log("Getting price");
-    if (!fromAmount || !selectedSellToken) return;
+    console.log(window.ethereum);
+    if (!fromAmount || !selectedSellToken || !selectedBuyToken) return;
     setLoading(true);
     // Only fetch price if from token, to token, and from token amount have been filled in ]
-    let amount = Number(Number(fromAmount) * 10 ** selectedSellToken?.decimals);
+    let amount = Number(fromAmount) * 10 ** selectedSellToken?.decimals;
     const params = {
       sellToken: selectedSellToken?.address,
       buyToken: selectedBuyToken?.address,
@@ -106,32 +109,38 @@ const Swap: NextPage = () => {
 
   async function getQuote(account) {
     console.log("Getting price");
-    if (!fromAmount || !selectedSellToken) return;
+    if (!fromAmount || !selectedSellToken || !selectedBuyToken) return;
     // Only fetch price if from token, to token, and from token amount have been filled in ]
-    let amount = String(Number(fromAmount) * 10 ** selectedSellToken?.decimals);
+    let amount = Number(fromAmount) * 10 ** selectedSellToken?.decimals;
     const params = {
       sellToken: selectedSellToken?.address,
       buyToken: selectedBuyToken?.address,
       sellAmount: amount,
-      expectedSlippage: slippage,
-      // takerAddress: account,
+      slippagePercentage: slippage,
+      enableSlippageProtection: true,
+      takerAddress: account,
     };
     // Fetch the swap price.
-    const response = await fetch(
-      `https://api.0x.org/swap/v1/quote?${qs.stringify(params)}`
-    );
-
-    const swapQuoteJSON = await response.json();
-    console.log("Quote: ", swapQuoteJSON);
-    // Use the returned values to populate the buy Amount and the estimated gas in the UI
-
-    selectedBuyToken?.decimals &&
-      setBuyAmount(
-        "" + swapQuoteJSON.buyAmount / 10 ** selectedBuyToken?.decimals
+    try {
+      const response = await fetch(
+        `https://api.0x.org/swap/v1/quote?${qs.stringify(params)}`
       );
-    //  document.getElementById("gas_estimate").innerHTML =
-    setEstimatedGas(swapQuoteJSON.estimatedGas);
-    return swapQuoteJSON;
+
+      const swapQuoteJSON = await response.json();
+      console.log("Quote: ", swapQuoteJSON);
+      // Use the returned values to populate the buy Amount and the estimated gas in the UI
+
+      selectedBuyToken?.decimals &&
+        setBuyAmount(
+          "" + swapQuoteJSON.buyAmount / 10 ** selectedBuyToken?.decimals
+        );
+      //  document.getElementById("gas_estimate").innerHTML =
+      setEstimatedGas(swapQuoteJSON.estimatedGas);
+      return swapQuoteJSON;
+    } catch (error) {
+      console.log(error);
+    }
+
     // The amount is calculated from the smallest base unit of the token. We get this by multiplying the (from amount) x (10 to the power of the number of decimal places)
   }
 
@@ -143,192 +152,23 @@ const Swap: NextPage = () => {
     console.log("takerAddress: ", takerAddress);
     // Pass this as the account param into getQuote() we built out earlier. This will return a JSON object trade order.
     const swapQuoteJSON = await getQuote(takerAddress);
-    const erc20abi: any = [
-      {
-        inputs: [
-          { internalType: "string", name: "name", type: "string" },
-          { internalType: "string", name: "symbol", type: "string" },
-          { internalType: "uint256", name: "max_supply", type: "uint256" },
-        ],
-        stateMutability: "nonpayable",
-        type: "constructor",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-        ],
-        name: "Approval",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "from",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "to",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-        ],
-        name: "Transfer",
-        type: "event",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "owner", type: "address" },
-          { internalType: "address", name: "spender", type: "address" },
-        ],
-        name: "allowance",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "approve",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [{ internalType: "address", name: "account", type: "address" }],
-        name: "balanceOf",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-        name: "burn",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "account", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "burnFrom",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "decimals",
-        outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "subtractedValue", type: "uint256" },
-        ],
-        name: "decreaseAllowance",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "addedValue", type: "uint256" },
-        ],
-        name: "increaseAllowance",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "name",
-        outputs: [{ internalType: "string", name: "", type: "string" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "symbol",
-        outputs: [{ internalType: "string", name: "", type: "string" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "totalSupply",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "recipient", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "transfer",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          { internalType: "address", name: "sender", type: "address" },
-          { internalType: "address", name: "recipient", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "transferFrom",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ];
+    console.log(swapQuoteJSON);
+    if (swapQuoteJSON.code) {
+      toast.error(swapQuoteJSON.reason);
+      return;
+    }
     // Set up approval amount for the token we want to trade from
     const fromTokenAddress = selectedSellToken?.address;
     // In order for us to interact with a ERC20 contract's method's, need to create a web3 object. This web3.eth.Contract object needs a erc20abi which we can get from any erc20 abi as well as the specific token address we are interested in interacting with, in this case, it's the fromTokenAddrss
     // Read More: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#web3-eth-contract
     const web3 = new Web3(Web3.givenProvider);
-    const ERC20TokenContract = new web3.eth.Contract(
-      erc20abi,
-      fromTokenAddress
-    );
-    console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+    const abi: any = erc20abi;
+    const ERC20TokenContract = new web3.eth.Contract(abi, fromTokenAddress);
+    // console.log("setup ERC20TokenContract: ", ERC20TokenContract);
     const maxApproval = ethers.constants.MaxInt256;
-    console.log("approval amount: ", maxApproval);
+    // const maxApproval = new BigNumber(2).pow(256).minus(1);
+
+    // console.log("approval amount: ", maxApproval);
     // Grant the allowance target (the 0x Exchange Proxy) an  allowance to spend our tokens. Note that this is a txn that incurs fees.
     const tx = await ERC20TokenContract.methods
       .approve(swapQuoteJSON.allowanceTarget, maxApproval)
@@ -352,7 +192,7 @@ const Swap: NextPage = () => {
       <Header />
       <Layout>
         {/* <Header /> */}
-
+        <ToastContainer />
         <section
           className=" px-6  w-full bg-gray-200 flex flex-col justify-center items-center bg-cover bg-right md:bg-fixed min-h-[calc(100vh-64px)] py-6"
           id=""

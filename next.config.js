@@ -22,7 +22,7 @@ const nextConfig = {
     // placeholder images in the console.
     nextImageExportOptimizer_generateAndUseBlurImages: true,
   },
-  // assetPrefix: ".",
+  assetPrefix: ".",
 
   // experimental:{
   //   images:{
