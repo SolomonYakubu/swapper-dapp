@@ -27,7 +27,7 @@ const Swap: NextPage = () => {
   const [tokenList, setTokenList] = useState<TokenList[]>([]);
   const [hideModal, setHideModal] = useState(true);
   const [hideSettings, setHideSettings] = useState(true);
-  const [estimatedGas, setEstimatedGas] = useState("");
+  const [estimatedGas, setEstimatedGas] = useState("0");
   const [buyAmount, setBuyAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [slippage, setSlippage] = useState<number>(1);
@@ -354,12 +354,12 @@ const Swap: NextPage = () => {
         {/* <Header /> */}
 
         <section
-          className=" px-6  w-full bg-zinc-800 flex flex-col justify-center items-center bg-cover bg-right md:bg-fixed min-h-[calc(100vh-64px)]"
+          className=" px-6  w-full bg-gray-200 flex flex-col justify-center items-center bg-cover bg-right md:bg-fixed min-h-[calc(100vh-64px)] py-6"
           id=""
         >
           <button
             onClick={() => connectToMetamask()}
-            className="font-[Questrial]  hover:bg-gradient-to-tr hover:bg-primary bg-grad bg-gradient-to-bl from-black to-[#262626] font-bold  text-white p-3 px-2 rounded-xl mr-1 border-none  self-end mb-10 "
+            className="font-[Questrial]  hover:bg-gradient-to-tr hover:bg-primary bg-grad bg-gradient-to-bl from-black to-[#262626] font-bold  text-white shadow-xl p-3 px-2 rounded-xl mr-1 border-none  self-end mb-10 "
           >
             {connected ? "Connected" : "Connect Wallet"}
           </button>
@@ -368,19 +368,14 @@ const Swap: NextPage = () => {
               Swapper
             </h3> */}
           </Fade>
-          <div className=" flex flex-col justify-center items-center md:w-1/3 shadow-lg group p-8 px-4 md:py-12 w-full bg-zinc-900 relative">
-            <AiOutlineSetting
-              size={30}
-              className="self-end text-zinc-500"
-              onClick={() => setHideSettings(false)}
-            />
+          <div className=" flex flex-col justify-center items-center md:w-1/3 shadow-lg group p-8 px-4 md:py-12 w-full bg-white relative rounded-lg">
             <div className="z-20 w-full flex flex-col justify-center items-center">
-              <p className="font-[Questrial] text-zinc-500 font-bold self-start">
+              <p className="font-[Questrial] text-black font-bold self-start">
                 Pay
               </p>
-              <div className="w-full flex justify-between items-center p-3 text-white bg-bg1 z-20">
+              <div className="flex w-full justify-between items-center rounded-lg text-white bg-gray-300 z-20 border border-solid border-gray-500">
                 <div
-                  className="text-lg "
+                  className="text-lg w-1/2 cursor-pointer"
                   onClick={() => {
                     getTokenList();
                     setSide("sell");
@@ -388,12 +383,12 @@ const Swap: NextPage = () => {
                   }}
                 >
                   {(selectedSellToken && (
-                    <div className="flex items-center justify-start gap-2">
+                    <div className=" bg-gray-400 text-white  p-3  rounded-l-lg flex gap-1 justify-start items-center w-full">
                       <ExportedImage
                         src={selectedSellToken.logoURI}
                         alt=""
-                        width={40}
-                        height={40}
+                        width={30}
+                        height={30}
                         unoptimized={true}
                         className=" rounded-full  border-secondary border-2 border-solid"
                       />
@@ -403,15 +398,15 @@ const Swap: NextPage = () => {
                       </p>
                     </div>
                   )) || (
-                    <div className=" bg-blue-600 text-white font-bold p-1 px-2 rounded-2xl">
+                    <div className="  bg-gray-500 text-white  p-3  rounded-l-lg">
                       Select token
                     </div>
                   )}
                 </div>
                 <input
                   type="number"
-                  placeholder="amount"
-                  className="p-2 w-2/5 bg-bg2"
+                  placeholder="0.00"
+                  className="p-3 w-2/5 bg-inherit outline-none text-right text-lg rounded-r-lg text-black"
                   onChange={(e) => {
                     setFromAmount(e.target.value);
                   }}
@@ -420,68 +415,81 @@ const Swap: NextPage = () => {
               </div>
 
               <RiSwapFill
-                size={50}
-                className="text-zinc-500 rounded-full text-center self-center m-1"
+                size={40}
+                className="text-zinc-400 rounded-full text-center self-center m-1"
               />
-              <p className="font-[Questrial] text-zinc-500 font-bold self-start">
+              <p className="font-[Questrial] text-black font-bold self-start">
                 Recieve
               </p>
 
-              <div className="flex w-full justify-between items-center p-3 text-white bg-bg1 z-20">
-                <div className="flex items-center justify-start gap-2">
-                  <div
-                    className="text-lg "
-                    id="buy"
-                    onClick={() => {
-                      getTokenList();
-                      setSide("buy");
-                      setHideModal(false);
-                    }}
-                  >
-                    {(selectedBuyToken && (
-                      <div className="flex items-center justify-start gap-2">
-                        <ExportedImage
-                          src={selectedBuyToken.logoURI}
-                          alt=""
-                          width={40}
-                          height={40}
-                          unoptimized={true}
-                          className=" rounded-full  border-secondary border-2 border-solid"
-                        />
+              <div className="flex w-full justify-between items-center rounded-lg text-white bg-gray-300 z-20 border border-solid border-gray-500">
+                <div
+                  className="text-lg bg-none w-1/2 cursor-pointer"
+                  id="buy"
+                  onClick={() => {
+                    getTokenList();
+                    setSide("buy");
+                    setHideModal(false);
+                  }}
+                >
+                  {(selectedBuyToken && (
+                    <div className=" bg-gray-400 text-white  p-3  rounded-l-lg flex gap-1 justify-start items-center w-full">
+                      <ExportedImage
+                        src={selectedBuyToken.logoURI}
+                        alt=""
+                        width={30}
+                        height={30}
+                        unoptimized={true}
+                        className=" rounded-full  border-secondary border-2 border-solid"
+                      />
 
-                        <p className="font-lg text-white font-[Questrial]">
-                          {selectedBuyToken.symbol}
-                        </p>
-                      </div>
-                    )) || (
-                      <div className=" bg-blue-600 text-white font-bold p-1 px-2 rounded-2xl">
-                        Select token
-                      </div>
-                    )}
-                  </div>
+                      <p className="font-lg text-white font-[Questrial]">
+                        {selectedBuyToken.symbol}
+                      </p>
+                    </div>
+                  )) || (
+                    <div className=" bg-gray-500 text-white  p-3  rounded-l-lg">
+                      Select token
+                    </div>
+                  )}
                 </div>
+
                 <input
                   type="text"
                   disabled
                   value={(loading && "fetching amount") || buyAmount}
-                  placeholder="amount"
-                  className="p-2 w-2/5 bg-bg2 "
+                  placeholder="0.00"
+                  className="p-3 w-2/5 bg-inherit text-right text-lg rounded-r-lg text-black"
                 />
               </div>
               <button
                 onClick={() => (connected ? trySwap() : connectToMetamask())}
-                className=" text-xl hover:bg-gradient-to-bl w-full my-5 font-[Questrial] bg-black border-2 border-solid border-zinc-500 text-zinc-500 p-3 px-4  rounded  flex-1 text-center transition-all duration-700 "
+                className=" text-xl hover:bg-gradient-to-bl w-full my-5 font-[Questrial] font-bold bg-black  text-white p-3 px-4  rounded-lg  flex-1 text-center transition-all duration-700 "
               >
                 {(connected && "Swap") || "Connect Wallet"}
               </button>
-              <div className="border-2 border-solid border-zinc-500 w-full">
-                <p className="my-1 mt-5 text-zinc-500 self-start px-2">
-                  Estimated Gas: {(loading && "estimating gas") || estimatedGas}
+              <div className="border border-solid border-black w-full rounded-lg">
+                <p className="my-1 mt-5 text-black self-start px-2 flex items-center justify-between text-sm">
+                  Estimated Gas:{" "}
+                  <span>{(loading && "estimating gas") || estimatedGas}</span>
                 </p>
-                <p className=" my-1 text-zinc-500 self-start px-2">
-                  Slippage: {slippage}
+                <p className="my-1  text-black self-start px-2 flex items-center justify-between text-sm">
+                  Expected Receive amount:{" "}
+                  <span>{(+buyAmount).toFixed(2)}</span>
                 </p>
-                <p className=" my-1 mt-5 text-zinc-500 self-start px-2 border-t-2 border-solid border-zinc-500">
+                <p className=" my-1 text-black self-start px-2 flex items-center justify-between text-sm">
+                  Slippage:{" "}
+                  <span className="flex items-center justify-center gap-1 font-bold">
+                    {" "}
+                    <AiOutlineSetting
+                      size={15}
+                      className=" text-black"
+                      onClick={() => setHideSettings(false)}
+                    />
+                    {slippage}%
+                  </span>
+                </p>
+                <p className=" my-1 mt-5 text-black self-start px-2 border-t border-solid border-black text-sm">
                   Swapper will find the best price for you
                 </p>
               </div>
@@ -490,7 +498,7 @@ const Swap: NextPage = () => {
             <div
               className={`${
                 (hideSettings && "scale-0 ") || "flex scale-100"
-              } flex-col justify-center items-center gap-5 absolute top-24 z-30 bg-zinc-600 w-11/12 p-5 transition-all duration-700`}
+              } cursor-pointer flex-col justify-center items-center gap-5 absolute top-24 z-30 bg-zinc-400 w-11/12 p-5 transition-all duration-500`}
             >
               <p className="font-bold text-lg">Set Slippage</p>
               <div className="flex">
@@ -515,7 +523,7 @@ const Swap: NextPage = () => {
               />
               <button
                 onClick={() => setHideSettings(true)}
-                className="text-xl  w-full my-5 font-[Questrial] bg-black border-2 border-solid border-zinc-500 text-zinc-500 p-3  rounded  flex-1 text-center "
+                className="text-xl  w-full my-5 font-[Questrial] bg-black border-2 border-solid border-black text-white p-3  rounded  flex-1 text-center "
               >
                 Done
               </button>
@@ -524,7 +532,7 @@ const Swap: NextPage = () => {
             <div
               className={`${
                 (hideModal && "scale-0") || "flex scale-100"
-              } flex-col bg-zinc-700 text-white h-96 absolute top-12 left-5 overflow-x-hidden w-48 z-30  bg-opacity-90 gap-2 p-4 py-8 transition-all duration-1000`}
+              } cursor-pointer flex-col bg-zinc-700 text-white h-96 absolute top-12 left-5 overflow-x-hidden w-48 z-30  bg-opacity-90 gap-2 p-4 py-8 transition-all duration-500`}
             >
               <AiOutlineClose
                 size={30}
@@ -581,7 +589,7 @@ const Swap: NextPage = () => {
                   {search?.symbol}
                 </p>
               </div>
-              <div className=" overflow-scroll h-3/4">
+              <div className=" overflow-scroll overflow-x-hidden h-3/4">
                 {tokenList?.map((item, index) => (
                   <div
                     className="flex items-center justify-start gap-2"
