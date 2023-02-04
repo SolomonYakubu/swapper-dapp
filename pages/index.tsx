@@ -118,7 +118,7 @@ const Swap: NextPage = () => {
       sellAmount: amount,
       slippagePercentage: slippage,
       enableSlippageProtection: true,
-      takerAddress: account,
+      // takerAddress: account,
     };
     // Fetch the swap price.
     try {
