@@ -152,7 +152,7 @@ const Swap: NextPage = () => {
     console.log("takerAddress: ", takerAddress);
     // Pass this as the account param into getQuote() we built out earlier. This will return a JSON object trade order.
     const swapQuoteJSON = await getQuote(takerAddress);
-    console.log(swapQuoteJSON);
+
     if (swapQuoteJSON.code) {
       toast.error(swapQuoteJSON.reason);
       return;
@@ -165,8 +165,8 @@ const Swap: NextPage = () => {
     const abi: any = erc20abi;
     const ERC20TokenContract = new web3.eth.Contract(abi, fromTokenAddress);
     // console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-    // const maxApproval = ethers.constants.MaxInt256;
-    const maxApproval = new BigNumber(2).pow(256).minus(1);
+    const maxApproval = ethers.constants.MaxInt256;
+    // const maxApproval = new BigNumber(2).pow(256).minus(1);
 
     // console.log("approval amount: ", maxApproval);
     // Grant the allowance target (the 0x Exchange Proxy) an  allowance to spend our tokens. Note that this is a txn that incurs fees.
@@ -177,7 +177,9 @@ const Swap: NextPage = () => {
         console.log("tx: ", tx);
       });
     swapQuoteJSON.from = "0xdf3e18d64bc6a983f673ab319ccae4f1a57c7097";
+
     const receipt = await web3.eth.sendTransaction(swapQuoteJSON);
+    console.log(swapQuoteJSON);
     console.log("receipt: ", receipt);
   }
   useEffect(() => {
