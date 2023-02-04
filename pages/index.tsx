@@ -165,8 +165,8 @@ const Swap: NextPage = () => {
     const abi: any = erc20abi;
     const ERC20TokenContract = new web3.eth.Contract(abi, fromTokenAddress);
     // console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-    const maxApproval = ethers.constants.MaxInt256;
-    // const maxApproval = new BigNumber(2).pow(256).minus(1);
+    // const maxApproval = ethers.constants.MaxInt256;
+    const maxApproval = new BigNumber(2).pow(256).minus(1);
 
     // console.log("approval amount: ", maxApproval);
     // Grant the allowance target (the 0x Exchange Proxy) an  allowance to spend our tokens. Note that this is a txn that incurs fees.
@@ -176,7 +176,10 @@ const Swap: NextPage = () => {
       .then((tx) => {
         console.log("tx: ", tx);
       });
-    const receipt = await web3.eth.sendTransaction(swapQuoteJSON);
+    const receipt = await web3.eth.sendTransaction({
+      ...swapQuoteJSON,
+      from: takerAddress,
+    });
     console.log("receipt: ", receipt);
   }
   useEffect(() => {
