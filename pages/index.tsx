@@ -357,7 +357,7 @@ const Swap: NextPage = () => {
               </div>
               <input
                 type="number"
-                className="p-3 text-white"
+                className="p-3 text-black"
                 placeholder="Custom Value"
                 onChange={(e) => setSlippage(+e.target.value)}
               />
