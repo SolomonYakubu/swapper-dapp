@@ -585,11 +585,11 @@ const Swap: NextPage = () => {
                   className=" rounded-full  border-secondary border-2 border-solid"
                 />
 
-                <p className="font-lg text-white font-[Questrial]">
+                <p className="text-lg text-white font-[Questrial]">
                   {search?.symbol}
                 </p>
               </div>
-              <div className=" overflow-scroll overflow-x-hidden h-3/4">
+              <div className="flex flex-col gap-2 overflow-scroll overflow-x-hidden h-3/4">
                 {tokenList?.map((item, index) => (
                   <div
                     className="flex items-center justify-start gap-2"
@@ -620,7 +620,7 @@ const Swap: NextPage = () => {
                       className=" rounded-full  border-secondary border-2 border-solid"
                     />
 
-                    <p className="font-lg text-white font-[Questrial]">
+                    <p className="text-lg text-white font-[Questrial]">
                       {item.symbol}
                     </p>
                   </div>
