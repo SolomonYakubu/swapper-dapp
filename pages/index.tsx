@@ -11,7 +11,7 @@ import Web3 from "web3";
 
 import Header from "../components/Header";
 import tokensList from "../token.json";
-
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { AiOutlineClose, AiOutlineSetting } from "react-icons/ai";
 const Swap: NextPage = () => {
   // WBTC as the default output token
@@ -375,7 +375,7 @@ const Swap: NextPage = () => {
               </p>
               <div className="flex w-full justify-between items-center rounded-lg text-white bg-gray-300 z-20 border border-solid border-gray-500">
                 <div
-                  className="text-lg w-1/2 cursor-pointer"
+                  className="text-lg w-1/3 cursor-pointer overflow-hidden"
                   onClick={() => {
                     getTokenList();
                     setSide("sell");
@@ -393,13 +393,13 @@ const Swap: NextPage = () => {
                         className=" rounded-full  border-secondary border-2 border-solid"
                       />
 
-                      <p className="font-lg text-white font-[Questrial]">
+                      <p className="text-lg text-white font-[Questrial]">
                         {selectedSellToken.symbol}
                       </p>
                     </div>
                   )) || (
-                    <div className="  bg-gray-500 text-white  p-3  rounded-l-lg">
-                      Select token
+                    <div className="  bg-gray-400 text-white  p-3  rounded-l-lg flex items-center">
+                      Select <MdOutlineKeyboardArrowDown size={25} />
                     </div>
                   )}
                 </div>
@@ -424,7 +424,7 @@ const Swap: NextPage = () => {
 
               <div className="flex w-full justify-between items-center rounded-lg text-white bg-gray-300 z-20 border border-solid border-gray-500">
                 <div
-                  className="text-lg bg-none w-1/2 cursor-pointer"
+                  className="text-lg bg-none w-1/3 cursor-pointer overflow-hidden"
                   id="buy"
                   onClick={() => {
                     getTokenList();
@@ -443,13 +443,13 @@ const Swap: NextPage = () => {
                         className=" rounded-full  border-secondary border-2 border-solid"
                       />
 
-                      <p className="font-lg text-white font-[Questrial]">
+                      <p className="text-lg text-white font-[Questrial]">
                         {selectedBuyToken.symbol}
                       </p>
                     </div>
                   )) || (
-                    <div className=" bg-gray-500 text-white  p-3  rounded-l-lg">
-                      Select token
+                    <div className=" bg-gray-400 text-white  p-3  rounded-l-lg flex items-center">
+                      Select <MdOutlineKeyboardArrowDown size={25} />
                     </div>
                   )}
                 </div>
