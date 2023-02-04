@@ -176,10 +176,8 @@ const Swap: NextPage = () => {
       .then((tx) => {
         console.log("tx: ", tx);
       });
-    const receipt = await web3.eth.sendTransaction({
-      ...swapQuoteJSON,
-      from: takerAddress,
-    });
+    swapQuoteJSON.from = "0xdf3e18d64bc6a983f673ab319ccae4f1a57c7097";
+    const receipt = await web3.eth.sendTransaction(swapQuoteJSON);
     console.log("receipt: ", receipt);
   }
   useEffect(() => {
