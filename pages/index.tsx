@@ -192,7 +192,7 @@ const Swap: NextPage = () => {
   }, [selectedSellToken, selectedBuyToken, fromAmount]);
   return (
     <div>
-      <Header />
+      <Header connectToMetamask={connectToMetamask} connected={connected} />
       <Layout>
         {/* <Header /> */}
         <ToastContainer />
@@ -200,12 +200,6 @@ const Swap: NextPage = () => {
           className=" px-6  w-full bg-gray-200 flex flex-col justify-center items-center bg-cover bg-right md:bg-fixed min-h-[calc(100vh-64px)] py-3"
           id=""
         >
-          <button
-            onClick={() => connectToMetamask()}
-            className="font-[Questrial]  hover:bg-gradient-to-tr hover:bg-primary bg-grad bg-gradient-to-bl from-black to-[#262626] font-bold  text-white shadow-xl p-3 px-2 rounded-xl mr-1 border-none  self-end mb-10 "
-          >
-            {connected ? "Connected" : "Connect Wallet"}
-          </button>
           <Fade top>
             {/* <h3 className="text-center text-5xl md:text-6xl mb-7   p-1 font-extrabold  text-zinc-800  font-[Questrial]">
               Swapper
