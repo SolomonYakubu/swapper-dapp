@@ -197,7 +197,7 @@ const Swap: NextPage = () => {
         {/* <Header /> */}
         <ToastContainer />
         <section
-          className=" px-6  w-full bg-gray-200 flex flex-col justify-center items-center bg-cover bg-right md:bg-fixed min-h-[calc(100vh-64px)] py-6"
+          className=" px-6  w-full bg-gray-200 flex flex-col justify-center items-center bg-cover bg-right md:bg-fixed min-h-[calc(100vh-64px)] py-3"
           id=""
         >
           <button

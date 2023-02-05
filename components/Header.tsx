@@ -6,7 +6,7 @@ import logo from "../public/images/logo.png";
 import ExportedImage from "next-image-export-optimizer";
 export default function Header() {
   const list = [
-    ["Home", "http://theswapper.tech/"],
+    ["Home", "https://theswapper.tech/"],
 
     ["Docs", "https://the-swapper-project.gitbook.io/the-swapper/"],
   ];
