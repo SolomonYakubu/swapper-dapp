@@ -163,9 +163,9 @@ const Swap: NextPage = () => {
     // Read More: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#web3-eth-contract
     const web3 = new Web3(Web3.givenProvider);
     const abi: any = erc20abi;
-    const ERC20TokenContract = new web3.eth.Contract(abi, fromTokenAddress);
-    // console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-    const maxApproval = ethers.constants.MaxInt256;
+    // const ERC20TokenContract = new web3.eth.Contract(abi, fromTokenAddress);
+
+    // const maxApproval = ethers.constants.MaxInt256;
     // const maxApproval = new BigNumber(2).pow(256).minus(1);
 
     // console.log("approval amount: ", maxApproval);
